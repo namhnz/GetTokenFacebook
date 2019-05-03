@@ -1,0 +1,13 @@
+﻿{
+	"error": {
+		"message": "User must verify their account on www.facebook.com",
+		"type": "FacebookApiException",
+		"code": 405,
+		"error_data": [],
+		"error_subcode": 1348033,
+		"is_transient": false,
+		"error_user_title": "Account Temporarily Unavailable",
+		"error_user_msg": "Your account is temporarily unavailable. Regain access by logging in from a mobile or web browser.",
+		"fbtrace_id": "FIfHT4Ce3Sr"
+	}
+}

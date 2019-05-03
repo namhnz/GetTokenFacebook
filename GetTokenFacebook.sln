@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28307.572
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FBToken.Main", "FBToken.Main\FBToken.Main.csproj", "{D709D6FF-89C0-41D5-A091-26480A7DA796}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FBToken.Tests", "FBToken.Tests\FBToken.Tests.csproj", "{B843C4B8-DBA3-49A8-8DFD-F951A98B5F29}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{D709D6FF-89C0-41D5-A091-26480A7DA796}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D709D6FF-89C0-41D5-A091-26480A7DA796}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D709D6FF-89C0-41D5-A091-26480A7DA796}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B843C4B8-DBA3-49A8-8DFD-F951A98B5F29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B843C4B8-DBA3-49A8-8DFD-F951A98B5F29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B843C4B8-DBA3-49A8-8DFD-F951A98B5F29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B843C4B8-DBA3-49A8-8DFD-F951A98B5F29}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

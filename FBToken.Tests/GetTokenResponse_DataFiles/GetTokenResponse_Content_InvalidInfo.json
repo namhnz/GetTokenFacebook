@@ -1,0 +1,12 @@
+﻿{
+	"error": {
+		"message": "Invalid username or password",
+		"type": "FacebookApiException",
+		"code": 401,
+		"error_subcode": 1348131,
+		"is_transient": false,
+		"error_user_title": "Wrong Credentials",
+		"error_user_msg": "Invalid username or password",
+		"fbtrace_id": "AlX84rew/JC"
+	}
+}

@@ -1,0 +1,9 @@
+﻿{
+	"session_key": "session_123456789",
+	"uid": 100011632516800,
+	"secret": "secret_123456789",
+	"access_token": "token_123456789",
+	"machine_id": "machine_123456789",
+	"confirmed": true,
+	"identifier": "testemail@gmail.com"
+}
