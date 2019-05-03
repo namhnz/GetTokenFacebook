@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FBToken.Main.Core;
 using FBToken.Main.Helpers;
+using FBToken.Main.Models;
 
 namespace FBToken.Main.ViewModels
 {
@@ -122,7 +123,7 @@ namespace FBToken.Main.ViewModels
                         var tokenInfo = await _fbTokenService.GetTokenInfoAsync(UserEmail, UserPassword);
                         if (tokenInfo.AccessToken == null)
                         {
-                            throw new Exception("Sai email hoặc password.");
+                            throw new Exception("Đã có lỗi xảy ra, vui lòng thử lại.");
                         }
 
                         FBToken = tokenInfo.AccessToken;
@@ -132,7 +133,19 @@ namespace FBToken.Main.ViewModels
                     }
                     catch (HttpRequestException ex)
                     {
-                        ErrorMsg = "Vui lòng kiểm tra kết nối Internet";
+                        ErrorMsg = "Vui lòng kiểm tra kết nối Internet.";
+                        Debug.WriteLine(ex.Message);
+                    }
+                    catch (FacebookUserCheckPointException ex)
+                    {
+                        ErrorMsg =
+                            "Tài khoản Facebook bị Checkpoint, vui lòng đăng nhập bằng trình duyệt trên máy tính hoặc điện thoại.";
+                        Debug.WriteLine(ex.Message);
+                    }
+                    catch (FacebookUserInvalidUsernameOrPasswordException ex)
+                    {
+                        ErrorMsg =
+                            "Sai email hoặc password. Vui lòng kiểm tra lại thông tin.";
                         Debug.WriteLine(ex.Message);
                     }
                     catch (Exception ex)

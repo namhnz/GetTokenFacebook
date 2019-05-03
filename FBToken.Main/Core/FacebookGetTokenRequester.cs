@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using FBToken.Main.Models;
 using Newtonsoft.Json;
 
 namespace FBToken.Main.Core
@@ -29,13 +30,25 @@ namespace FBToken.Main.Core
         public async Task<T> GetRequestAsync<T>(string endpoint = FBTokenAPIUrlBase, string args = null)
         {
             var response = await _httpClient.GetAsync($"{endpoint}?{args}");
+            var resultString = await response.Content.ReadAsStringAsync();
+
             if (!response.IsSuccessStatusCode)
             {
+                dynamic resultObj = JsonConvert.DeserializeObject<dynamic>(resultString);
+                if (resultObj.error.code == 405)
+                {
+                    throw new FacebookUserCheckPointException(resultObj.error.message.ToString());
+                }
+
+                if (resultObj.error.code == 401)
+                {
+                    throw new FacebookUserInvalidUsernameOrPasswordException(resultObj.error.message.ToString());
+                }
+
                 return default(T);
             }
 
-            var result = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<T>(result);
+            return JsonConvert.DeserializeObject<T>(resultString);
         }
 
         private StringContent GetPayload(object obj)
