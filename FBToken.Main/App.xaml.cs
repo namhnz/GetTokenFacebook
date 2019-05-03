@@ -8,6 +8,10 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 
+//Nguồn: 
+//https://www.facebook.com/pagevynghia/posts/2452869638282083
+//https://www.siblog.net/2019/02/api-get-token-facebook-full-quyen-khong-checkpoint.html?fbclid=IwAR1eZVCBaKBWp-T3WmODC9Wh7ccbGGf6uZpcnWG1cMP46HMD5f2XKcm8oug
+
 namespace FBToken.Main
 {
     /// <summary>

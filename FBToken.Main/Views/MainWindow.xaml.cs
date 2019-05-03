@@ -130,6 +130,7 @@ namespace FBToken.Main.Views
 
                 UWPControls.TextBlock errorMsgTextBlock = new UWPControls.TextBlock();
                 errorMsgTextBlock.Width = 300;
+                errorMsgTextBlock.TextWrapping = TextWrapping.WrapWholeWords;
                 errorMsgTextBlock.Foreground = new Windows.UI.Xaml.Media.SolidColorBrush(Windows.UI.Colors.Red);
                 errorMsgTextBlock.SetBinding(UWPControls.TextBlock.TextProperty, new Windows.UI.Xaml.Data.Binding()
                 {
