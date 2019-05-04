@@ -98,7 +98,11 @@
     <Compile Include="Models\FacebookUserCheckPointException.cs" />
     <Compile Include="Models\FacebookUserInvalidUsernameOrPasswordException.cs" />
     <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="ViewModels\BrowseFacebookViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="Views\BrowseFacebookView.xaml.cs">
+      <DependentUpon>BrowseFacebookView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
@@ -131,12 +135,19 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\BrowseFacebookView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.Toolkit.Wpf.UI.Controls.WebView">
+      <Version>5.1.1</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Wpf.UI.XamlHost">
       <Version>5.1.1</Version>
     </PackageReference>

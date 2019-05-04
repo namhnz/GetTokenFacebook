@@ -7,11 +7,13 @@
     xmlns:xamlHost="clr-namespace:Microsoft.Toolkit.Wpf.UI.XamlHost;assembly=Microsoft.Toolkit.Wpf.UI.XamlHost"
     x:Class="FBToken.Main.Views.MainWindow"
     mc:Ignorable="d"
-    Title="Get FB Token" Height="450" Width="800">
+    Title="Get FB Token" Height="500" Width="800">
     <Grid Name="RootGrid">
         
         <StackPanel HorizontalAlignment="Center"
-                    VerticalAlignment="Top">
+                    VerticalAlignment="Top"
+                    Panel.ZIndex="0"
+                    Name="MainGetTokenContent">
             <!-- https://stackoverflow.com/questions/5645274/image-in-wpf-getting-blurry -->
             <!-- <Image Width="50" -->
             <!--        Height="50" -->
@@ -26,6 +28,26 @@
             <xamlHost:WindowsXamlHost InitialTypeName="Windows.UI.Xaml.Controls.StackPanel"
                                       x:Name="ResultStackPanel" />
         </StackPanel>
-
+        <Grid VerticalAlignment="Bottom"
+              Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Hãy đăng nhập vào Facebook trước nếu là lần đầu bạn sử dụng API này để lấy token facebook để tránh hoàn toàn việc tài khoản bị checkpoint nhé."
+                       Foreground="#0065B3"
+                       TextWrapping="Wrap"
+                       Grid.Column="0"
+                       VerticalAlignment="Center"
+                       Margin="0 0 10 0"/>
+            <xamlHost:WindowsXamlHost Grid.Column="1"
+                                      Name="OpenCloseBrowserButton"
+                                      InitialTypeName="Windows.UI.Xaml.Controls.Button"
+                                      Panel.ZIndex="100"/>
+        </Grid>
+        <Grid Name="BrowseFacebookContent"
+              Panel.ZIndex="50">
+            <!-- Dùng để hiển thị browser thực hiện login lần đầu -->
+        </Grid>
     </Grid>
 </Window>
