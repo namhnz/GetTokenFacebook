@@ -26,7 +26,7 @@ namespace FBToken.Tests
 
             string token = "token_123456789";
 
-            FBGetTokenRequesterStub_Success requesterStub = new FBGetTokenRequesterStub_Success("GetTokenResponse_DataFiles\\GetTokenResponse_Content_Success.json");
+            FBGetTokenRequesterStub requesterStub = new FBGetTokenRequesterStub("GetTokenResponse_DataFiles\\GetTokenResponse_Content_Success.json");
             FacebookTokenService tokenServiceSUT = new FacebookTokenService(requesterStub);
 
             //Act
@@ -48,7 +48,7 @@ namespace FBToken.Tests
             string requestParamString =
                 $"email={email}&password={password}&access_token=6628568379|c1e620fa708a1d5696fb991c1bde5662&method=post";
 
-            FBGetTokenRequesterStub_Checkpoint requesterStub = new FBGetTokenRequesterStub_Checkpoint();
+            FBGetTokenRequesterStub requesterStub = new FBGetTokenRequesterStub("GetTokenResponse_DataFiles\\GetTokenResponse_Content_Checkpoint.json");
             FacebookTokenService tokenServiceSUT = new FacebookTokenService(requesterStub);
 
             Exception threwException = null;
@@ -64,17 +64,49 @@ namespace FBToken.Tests
             }
 
             //Assert
+            Assert.AreEqual($"{baseRequestUrl}?{requestParamString}", requesterStub.CalledUrl);
             Assert.IsInstanceOf<FacebookUserCheckPointException>(threwException);
+        }
+
+        [Test]
+        public async Task FacebookTokenService_RightUsernameAndPassword_InvalidUsernameOrPasswordExceptionException()
+        {
+            //Arrange
+            string email = "testemail@gmail.com";
+            string password = "wrongpassoftest";
+
+            string baseRequestUrl = @"https://b-graph.facebook.com/auth/login";
+            string requestParamString =
+                $"email={email}&password={password}&access_token=6628568379|c1e620fa708a1d5696fb991c1bde5662&method=post";
+
+            FBGetTokenRequesterStub requesterStub = new FBGetTokenRequesterStub("GetTokenResponse_DataFiles\\GetTokenResponse_Content_InvalidInfo.json");
+            FacebookTokenService tokenServiceSUT = new FacebookTokenService(requesterStub);
+
+            Exception threwException = null;
+
+            //Act
+            try
+            {
+                UserTokenInfo tokenInfoResult = await tokenServiceSUT.GetTokenInfoAsync(email, password);
+            }
+            catch (Exception ex)
+            {
+                threwException = ex;
+            }
+
+            //Assert
+            Assert.AreEqual($"{baseRequestUrl}?{requestParamString}", requesterStub.CalledUrl);
+            Assert.IsInstanceOf<FacebookUserInvalidUsernameOrPasswordException>(threwException);
         }
     }
 
-    public class FBGetTokenRequesterStub_Success : IWebRequester
+    public class FBGetTokenRequesterStub : IWebRequester
     {
         //https://stackoverflow.com/questions/5311023/mocking-generic-method-call-for-any-given-type-parameter
 
         private string _responseDataFilePath;
 
-        public FBGetTokenRequesterStub_Success(string responseResponseDataFilePath)
+        public FBGetTokenRequesterStub(string responseResponseDataFilePath)
         {
             _responseDataFilePath = responseResponseDataFilePath;
         }
@@ -97,16 +129,4 @@ namespace FBToken.Tests
         public string CalledUrl { get; set; }
     }
 
-    public class FBGetTokenRequesterStub_Checkpoint : IWebRequester
-    {
-        public Task PostRequestAsync<T>(string endpoint, object data, string args = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<T> GetRequestAsync<T>(string endpoint, string args = null)
-        {
-            throw new FacebookUserCheckPointException();
-        }
-    }
 }

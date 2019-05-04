@@ -121,7 +121,7 @@ namespace FBToken.Main.ViewModels
 //                        //
 
                         var tokenInfo = await _fbTokenService.GetTokenInfoAsync(UserEmail, UserPassword);
-                        if (tokenInfo.AccessToken == null)
+                        if (tokenInfo?.AccessToken == null)
                         {
                             throw new Exception("Đã có lỗi xảy ra, vui lòng thử lại.");
                         }

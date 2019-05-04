@@ -32,22 +32,6 @@ namespace FBToken.Main.Core
             var response = await _httpClient.GetAsync($"{endpoint}?{args}");
             var resultString = await response.Content.ReadAsStringAsync();
 
-            if (!response.IsSuccessStatusCode)
-            {
-                dynamic resultObj = JsonConvert.DeserializeObject<dynamic>(resultString);
-                if (resultObj.error.code == 405)
-                {
-                    throw new FacebookUserCheckPointException(resultObj.error.message.ToString());
-                }
-
-                if (resultObj.error.code == 401)
-                {
-                    throw new FacebookUserInvalidUsernameOrPasswordException(resultObj.error.message.ToString());
-                }
-
-                return default(T);
-            }
-
             return JsonConvert.DeserializeObject<T>(resultString);
         }
 
