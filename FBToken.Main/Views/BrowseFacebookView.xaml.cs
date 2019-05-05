@@ -59,7 +59,7 @@ namespace FBToken.Main.Views
                 WebsiteTitle.Text = e.WebErrorStatus.ToString();
             }
 
-            CookiesCollectionGetterForWebView.GetBrowserCookiesAndWriteLog(new Uri("https://facebook.com/"), "WebView");
+            CookiesCollectionManagerForWebView.GetBrowserCookiesAndWriteLog(new Uri("https://facebook.com/"), "WebView");
         }
     }
 }

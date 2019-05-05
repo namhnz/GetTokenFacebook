@@ -17,6 +17,7 @@ namespace FBToken.Main.ViewModels
 //            @"EAAAAAYsX7TsBAIfpLu5DzPld7e0Gj3hYZBN9k0AwjmoZCOtwZA4avQjBugGsQ1iEAOlHdPqUFvZAUPC0zzHN517ZB0fx9HY281WFAHnjL22De3gtAzwhD3AoUfu62yAA37D7uV97JpvosCO99vQuaUJ3pqNii2m4QZCjvyOdkBhNqzYYaNiJ9NydR5SzxEYMrUYw";
 
         private IFacebookTokenService _fbTokenService;
+        private ISettingsRepos _settingsRepos;
 
         private string _error;
 
@@ -99,6 +100,7 @@ namespace FBToken.Main.ViewModels
         public MainWindowViewModel()
         {
             _fbTokenService = FacebookServiceFactory.GetFacebookTokenWithCookiesSharedServiceInstance();
+            _settingsRepos = SettingsCreatorFactory.GetSetingsInstance();
 
             GetTokenCommand = new DelegateCommand(async o =>
                 {
@@ -120,6 +122,18 @@ namespace FBToken.Main.ViewModels
                         //FBToken = SampleToken;
                         //
 
+                        string lastEmail = _settingsRepos.LastLoggedInEmail;
+                        if (UserEmail != lastEmail)
+                        {
+                            ////Tương tự log out khỏi browser khi sử dụng tài khoản mới
+                            //CookiesCollectionManagerForWebView.DeleteBrowserCookies(new Uri("https://facebook.com/"));
+                            //Tính năng này hiện không hoạt động, do đó trước khi get token cho tài khoản mới thì cần
+                            //logout tài khoản cũ và đăng nhập bằng tài khoản mới trên trình duyệt
+
+                            //Lưu lại email đã dùng để lấy token mới
+                            _settingsRepos.LastLoggedInEmail = UserEmail;
+                        }
+
                         var tokenInfo = await _fbTokenService.GetTokenInfoAsync(UserEmail, UserPassword);
                         if (tokenInfo?.AccessToken == null)
                         {
@@ -127,6 +141,7 @@ namespace FBToken.Main.ViewModels
                         }
 
                         FBToken = tokenInfo.AccessToken;
+                        
 
                         Debug.WriteLine($"Token: {FBToken}");
 

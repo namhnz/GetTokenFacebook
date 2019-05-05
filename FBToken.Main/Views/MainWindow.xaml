@@ -34,7 +34,7 @@
                 <ColumnDefinition/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="Hãy đăng nhập vào Facebook trước nếu là lần đầu dùng tool này lấy token facebook để tránh việc tài khoản bị checkpoint."
+            <TextBlock Text="Để tránh bị checkpoint, vui lòng đảm bảo trình duyệt đã đăng nhập vào tài khoản mà bạn sẽ lấy token."
                        Foreground="#0065B3"
                        TextWrapping="Wrap"
                        Grid.Column="0"

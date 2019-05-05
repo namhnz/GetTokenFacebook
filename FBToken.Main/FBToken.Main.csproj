@@ -94,7 +94,10 @@
     <Compile Include="Core\FBGetTokenCookiesSharedRequester.cs" />
     <Compile Include="Core\IFacebookTokenService.cs" />
     <Compile Include="Core\IWebRequester.cs" />
-    <Compile Include="Helpers\CookiesCollectionGetterForWebView.cs" />
+    <Compile Include="Core\ISettingsRepos.cs" />
+    <Compile Include="Core\SettingsCreatorFactory.cs" />
+    <Compile Include="Core\SettingsRepos.cs" />
+    <Compile Include="Helpers\CookiesCollectionManagerForWebView.cs" />
     <Compile Include="Helpers\DelegateCommand.cs" />
     <Compile Include="Helpers\IViewModel.cs" />
     <Compile Include="Models\FacebookUserCheckPointException.cs" />
