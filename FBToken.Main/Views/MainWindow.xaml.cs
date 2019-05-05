@@ -103,6 +103,12 @@ namespace FBToken.Main.Views
                 passwordBox.Margin = new Windows.UI.Xaml.Thickness(10);
                 passwordBox.PasswordChanged += (o, args) => { _viewModel.UserPassword = passwordBox.Password; };
 
+                //Thêm tooltip cho password TextBox
+                UWPControls.ToolTip passwordToolTip = new UWPControls.ToolTip();
+                passwordToolTip.Content =
+                    "Để giảm thiểu khả năng checkpoint và tăng độ bảo mật, các bạn nên dùng Mật khẩu ứng dụng. Để lấy Mật khẩu ứng dụng: Cài đặt > Bảo mật và đăng nhập > Xác thực 2 yếu tố > Mật khẩu ứng dụng";
+                UWPControls.ToolTipService.SetToolTip(passwordBox, passwordToolTip);
+
                 UWPControls.TextBox emailTextBox = new UWPControls.TextBox();
                 emailTextBox.PlaceholderText = "Nhập email";
                 emailTextBox.IsSpellCheckEnabled = false;

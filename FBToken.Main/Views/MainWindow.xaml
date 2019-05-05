@@ -7,7 +7,7 @@
     xmlns:xamlHost="clr-namespace:Microsoft.Toolkit.Wpf.UI.XamlHost;assembly=Microsoft.Toolkit.Wpf.UI.XamlHost"
     x:Class="FBToken.Main.Views.MainWindow"
     mc:Ignorable="d"
-    Title="Get FB Token" Height="500" Width="800">
+    Title="Get FB Token" Height="610" Width="460">
     <Grid Name="RootGrid">
         
         <StackPanel HorizontalAlignment="Center"
@@ -34,12 +34,13 @@
                 <ColumnDefinition/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="Hãy đăng nhập vào Facebook trước nếu là lần đầu bạn sử dụng API này để lấy token facebook để tránh hoàn toàn việc tài khoản bị checkpoint nhé."
+            <TextBlock Text="Hãy đăng nhập vào Facebook trước nếu là lần đầu dùng tool này lấy token facebook để tránh việc tài khoản bị checkpoint."
                        Foreground="#0065B3"
                        TextWrapping="Wrap"
                        Grid.Column="0"
                        VerticalAlignment="Center"
-                       Margin="0 0 10 0"/>
+                       Margin="0 0 10 0"
+                       FontSize="11"/>
             <xamlHost:WindowsXamlHost Grid.Column="1"
                                       Name="OpenCloseBrowserButton"
                                       InitialTypeName="Windows.UI.Xaml.Controls.Button"
