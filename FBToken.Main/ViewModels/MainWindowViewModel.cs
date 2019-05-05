@@ -98,7 +98,7 @@ namespace FBToken.Main.ViewModels
 
         public MainWindowViewModel()
         {
-            _fbTokenService = FacebookServiceFactory.GetFacebookTokenServiceInstance();
+            _fbTokenService = FacebookServiceFactory.GetFacebookTokenWithCookiesSharedServiceInstance();
 
             GetTokenCommand = new DelegateCommand(async o =>
                 {
@@ -114,11 +114,11 @@ namespace FBToken.Main.ViewModels
 
                     try
                     {
-//                        //For testing
-//                        await Task.Delay(1000);
-//                        throw new Exception("Internet connection error.");
-//                        FBToken = SampleToken;
-//                        //
+                        //For testing
+                        //await Task.Delay(1000);
+                        //throw new Exception("Internet connection error.");
+                        //FBToken = SampleToken;
+                        //
 
                         var tokenInfo = await _fbTokenService.GetTokenInfoAsync(UserEmail, UserPassword);
                         if (tokenInfo?.AccessToken == null)

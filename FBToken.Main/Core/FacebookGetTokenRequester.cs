@@ -29,6 +29,7 @@ namespace FBToken.Main.Core
 
         public async Task<T> GetRequestAsync<T>(string endpoint = FBTokenAPIUrlBase, string args = null)
         {
+            //TODO: sửa dấu chấm hỏi nếu args == null
             var response = await _httpClient.GetAsync($"{endpoint}?{args}");
             var resultString = await response.Content.ReadAsStringAsync();
 

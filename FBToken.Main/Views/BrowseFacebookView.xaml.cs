@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Windows.Web.Http;
+using Windows.Web.Http.Filters;
+using FBToken.Main.Helpers;
 using FBToken.Main.ViewModels;
 using Microsoft.Toolkit.Win32.UI.Controls.Interop.WinRT;
 using Microsoft.Toolkit.Wpf.UI.XamlHost;
@@ -54,6 +58,8 @@ namespace FBToken.Main.Views
             {
                 WebsiteTitle.Text = e.WebErrorStatus.ToString();
             }
+
+            CookiesCollectionGetterForWebView.GetBrowserCookiesAndWriteLog(new Uri("https://facebook.com/"), "WebView");
         }
     }
 }

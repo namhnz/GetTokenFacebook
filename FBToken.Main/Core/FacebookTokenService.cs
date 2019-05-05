@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using FBToken.Main.Models;
 using Microsoft.CSharp.RuntimeBinder;
@@ -19,7 +20,7 @@ namespace FBToken.Main.Core
             string baseUrl = @"https://b-graph.facebook.com/auth/login";
             string paramString =
                 $"email={email}&password={password}&access_token=6628568379|c1e620fa708a1d5696fb991c1bde5662&method=post";
-            var result = await _requester.GetRequestAsync<dynamic>(baseUrl,paramString);
+            var result = await _requester.GetRequestAsync<dynamic>(baseUrl, paramString);
 
             //https://stackoverflow.com/questions/2998954/test-if-a-property-is-available-on-a-dynamic-variable
             try
@@ -37,7 +38,6 @@ namespace FBToken.Main.Core
             }
             catch (RuntimeBinderException ex)
             {
-
             }
 
             try
@@ -57,7 +57,6 @@ namespace FBToken.Main.Core
             }
             catch (RuntimeBinderException ex)
             {
-                
             }
 
             if (result == null)
@@ -70,7 +69,6 @@ namespace FBToken.Main.Core
                 //Có kết quả trả về từ server nhưng không nằm trong các trường hợp error và token info ở trên
                 return new UserTokenInfo();
             }
-            
         }
     }
 }

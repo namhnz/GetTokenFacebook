@@ -14,5 +14,12 @@ namespace FBToken.Main.Core
             IFacebookTokenService fbTokenService = new FacebookTokenService(requester);
             return fbTokenService;
         }
+
+        public static IFacebookTokenService GetFacebookTokenWithCookiesSharedServiceInstance()
+        {
+            IWebRequester requester = new FBGetTokenCookiesSharedRequester();
+            IFacebookTokenService fbTokenService = new FacebookTokenService(requester);
+            return fbTokenService;
+        }
     }
 }
