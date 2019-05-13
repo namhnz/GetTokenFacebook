@@ -1,4 +1,4 @@
-﻿namespace FBToken.Main.Core
+﻿namespace FBToken.Main.Core.Repository.Settings
 {
     public interface ISettingsRepos
     {

@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace FBToken.Main.Core
+namespace FBToken.Main.Core.Repository.Settings
 {
     //https://stackoverflow.com/questions/52079133/save-load-a-browser-session-of-httpclient-in-c-sharp
     //https://stackoverflow.com/questions/37094671/save-a-dictionary-to-a-binary-file

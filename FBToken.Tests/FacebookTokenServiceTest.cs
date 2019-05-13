@@ -3,6 +3,8 @@ using System.Dynamic;
 using System.IO;
 using System.Threading.Tasks;
 using FBToken.Main.Core;
+using FBToken.Main.Core.Services.TokenServices;
+using FBToken.Main.Core.WebRequester;
 using FBToken.Main.Models;
 using Moq;
 using Newtonsoft.Json;
@@ -13,6 +15,8 @@ namespace FBToken.Tests
     [TestFixture]
     public class FacebookTokenServiceTest
     {
+        #region Sử dụng requester cũ
+
         [Test]
         public async Task FacebookTokenService_RightUsernameAndPassword_ReturnToken()
         {
@@ -26,7 +30,8 @@ namespace FBToken.Tests
 
             string token = "token_123456789";
 
-            FBGetTokenRequesterStub requesterStub = new FBGetTokenRequesterStub("GetTokenResponse_DataFiles\\GetTokenResponse_Content_Success.json");
+            FBGetTokenRequesterStub requesterStub =
+                new FBGetTokenRequesterStub("GetTokenResponse_DataFiles\\GetTokenResponse_Content_Success.json");
             FacebookTokenService tokenServiceSUT = new FacebookTokenService(requesterStub);
 
             //Act
@@ -48,7 +53,8 @@ namespace FBToken.Tests
             string requestParamString =
                 $"email={email}&password={password}&access_token=6628568379|c1e620fa708a1d5696fb991c1bde5662&method=post";
 
-            FBGetTokenRequesterStub requesterStub = new FBGetTokenRequesterStub("GetTokenResponse_DataFiles\\GetTokenResponse_Content_Checkpoint.json");
+            FBGetTokenRequesterStub requesterStub =
+                new FBGetTokenRequesterStub("GetTokenResponse_DataFiles\\GetTokenResponse_Content_Checkpoint.json");
             FacebookTokenService tokenServiceSUT = new FacebookTokenService(requesterStub);
 
             Exception threwException = null;
@@ -79,7 +85,8 @@ namespace FBToken.Tests
             string requestParamString =
                 $"email={email}&password={password}&access_token=6628568379|c1e620fa708a1d5696fb991c1bde5662&method=post";
 
-            FBGetTokenRequesterStub requesterStub = new FBGetTokenRequesterStub("GetTokenResponse_DataFiles\\GetTokenResponse_Content_InvalidInfo.json");
+            FBGetTokenRequesterStub requesterStub =
+                new FBGetTokenRequesterStub("GetTokenResponse_DataFiles\\GetTokenResponse_Content_InvalidInfo.json");
             FacebookTokenService tokenServiceSUT = new FacebookTokenService(requesterStub);
 
             Exception threwException = null;
@@ -98,7 +105,99 @@ namespace FBToken.Tests
             Assert.AreEqual($"{baseRequestUrl}?{requestParamString}", requesterStub.CalledUrl);
             Assert.IsInstanceOf<FacebookUserInvalidUsernameOrPasswordException>(threwException);
         }
+
+        #endregion
+
+        #region Sử dụng POST của requester
+
+        [Test]
+        public async Task FacebookTokenService_UsingPostMethod_RightUsernameAndPassword_ReturnToken()
+        {
+            //Arrange
+            string email = "testemail@gmail.com";
+            string password = "passoftest";
+
+            string baseRequestUrl = @"https://b-graph.facebook.com/auth/login";
+
+            string token = "token_123456789";
+
+            FBGetTokenRequesterStub requesterStub =
+                new FBGetTokenRequesterStub("GetTokenResponse_DataFiles\\GetTokenResponse_Content_Success.json");
+            FacebookTokenService tokenServiceSUT = new FacebookTokenService(requesterStub);
+
+            //Act
+            UserTokenInfo tokenInfoResult = await tokenServiceSUT.GetTokenInfoAsyncUsingPostMethod(email, password);
+
+            //Assert
+            Assert.AreEqual(baseRequestUrl, requesterStub.CalledUrl);
+            Assert.AreEqual(token, tokenInfoResult.AccessToken);
+        }
+
+        [Test]
+        public async Task FacebookTokenService_UsingPostMethod_RightUsernameAndPassword_CheckpointException()
+        {
+            //Arrange
+            string email = "testemail@gmail.com";
+            string password = "passoftest";
+
+            string baseRequestUrl = @"https://b-graph.facebook.com/auth/login";
+
+            FBGetTokenRequesterStub requesterStub =
+                new FBGetTokenRequesterStub("GetTokenResponse_DataFiles\\GetTokenResponse_Content_Checkpoint.json");
+            FacebookTokenService tokenServiceSUT = new FacebookTokenService(requesterStub);
+
+            Exception threwException = null;
+
+            //Act
+            try
+            {
+                UserTokenInfo tokenInfoResult = await tokenServiceSUT.GetTokenInfoAsyncUsingPostMethod(email, password);
+            }
+            catch (Exception ex)
+            {
+                threwException = ex;
+            }
+
+            //Assert
+            Assert.AreEqual(baseRequestUrl, requesterStub.CalledUrl);
+            Assert.IsInstanceOf<FacebookUserCheckPointException>(threwException);
+        }
+
+        [Test]
+        public async Task
+            FacebookTokenService_UsingPostMethod_RightUsernameAndPassword_InvalidUsernameOrPasswordExceptionException()
+        {
+            //Arrange
+            string email = "testemail@gmail.com";
+            string password = "wrongpassoftest";
+
+            string baseRequestUrl = @"https://b-graph.facebook.com/auth/login";
+
+            FBGetTokenRequesterStub requesterStub =
+                new FBGetTokenRequesterStub("GetTokenResponse_DataFiles\\GetTokenResponse_Content_InvalidInfo.json");
+            FacebookTokenService tokenServiceSUT = new FacebookTokenService(requesterStub);
+
+            Exception threwException = null;
+
+            //Act
+            try
+            {
+                UserTokenInfo tokenInfoResult = await tokenServiceSUT.GetTokenInfoAsyncUsingPostMethod(email, password);
+            }
+            catch (Exception ex)
+            {
+                threwException = ex;
+            }
+
+            //Assert
+            Assert.AreEqual(baseRequestUrl, requesterStub.CalledUrl);
+            Assert.IsInstanceOf<FacebookUserInvalidUsernameOrPasswordException>(threwException);
+        }
+
+        #endregion
     }
+
+    #region FacebookTokenRequester Stub
 
     public class FBGetTokenRequesterStub : IWebRequester
     {
@@ -111,27 +210,29 @@ namespace FBToken.Tests
             _responseDataFilePath = responseResponseDataFilePath;
         }
 
-        public Task PostRequestAsync<T>(string endpoint, object data, string args = null)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public Task<T> GetRequestAsync<T>(string endpoint, string args = null)
         {
-            CalledUrl = $"{endpoint}?{args}";
+            CalledUrl = args != null ? $"{endpoint}?{args}" : endpoint;
 
             //https://stackoverflow.com/questions/6080596/how-can-i-load-this-file-into-an-nunit-test
-            string praticeResponseResult = File.ReadAllText(Path.Combine(TestContext.CurrentContext.TestDirectory, _responseDataFilePath));
+            string praticeResponseResult =
+                File.ReadAllText(Path.Combine(TestContext.CurrentContext.TestDirectory, _responseDataFilePath));
             T responseResult = JsonConvert.DeserializeObject<T>(praticeResponseResult);
             return Task.FromResult(responseResult);
         }
 
-        public Task<T> NewPostRequestAsync<T>(string endpoint, object data, string args = null)
+        public Task<T> PostRequestAsync<T>(string endpoint, object data, string args = null)
         {
-            throw new NotImplementedException();
+            CalledUrl = args != null ? $"{endpoint}?{args}" : endpoint;
+
+            string praticeResponseResult =
+                File.ReadAllText(Path.Combine(TestContext.CurrentContext.TestDirectory, _responseDataFilePath));
+            T responseResult = JsonConvert.DeserializeObject<T>(praticeResponseResult);
+            return Task.FromResult(responseResult);
         }
 
         public string CalledUrl { get; set; }
     }
 
+    #endregion
 }

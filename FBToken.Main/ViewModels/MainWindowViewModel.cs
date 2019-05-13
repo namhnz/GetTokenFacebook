@@ -7,6 +7,10 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using FBToken.Main.Core;
+using FBToken.Main.Core.Factories;
+using FBToken.Main.Core.Repository.Settings;
+using FBToken.Main.Core.Services.TokenServices;
+using FBToken.Main.Core.Services.UIInteractServices;
 using FBToken.Main.Helpers;
 using FBToken.Main.Models;
 
@@ -22,19 +26,7 @@ namespace FBToken.Main.ViewModels
         private IDialogService _dialogService;
 
         private string _error;
-
-        public string ErrorMsg
-        {
-            get { return _error; }
-            set {
-                if (_error != value)
-                {
-                    _error = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
+        #region Phần dữ liệu người dùng nhập vào
 
         private string _email;
 
@@ -66,6 +58,8 @@ namespace FBToken.Main.ViewModels
             }
         }
 
+        #endregion
+
         private bool _isGettingData;
 
         public bool IsGettingData
@@ -78,6 +72,21 @@ namespace FBToken.Main.ViewModels
                     _isGettingData = value;
                     OnPropertyChanged();
                     GetTokenCommand.RaiseCanExecuteChanged();
+                }
+            }
+        }
+
+        #region Phần kết quả sau khi gửi yêu cầu lấy tokem, gồm thông báo lỗi hoặc token
+
+        public string ErrorMsg
+        {
+            get { return _error; }
+            set
+            {
+                if (_error != value)
+                {
+                    _error = value;
+                    OnPropertyChanged();
                 }
             }
         }
@@ -96,13 +105,19 @@ namespace FBToken.Main.ViewModels
             }
         }
 
+        #endregion
+
+
+        #region Các commands cho các buttons
 
         public DelegateCommand GetTokenCommand { get; private set; }
         public DelegateCommand SaveTokenCommand { get; private set; }
 
+        #endregion
+        
         public MainWindowViewModel()
         {
-            _dialogService = IOServiceFactory.GetDialogServiceInstance();
+            _dialogService = DialogServiceFactory.GetDialogServiceInstance();
             _fbTokenService = FacebookServiceFactory.GetFacebookTokenWithCookiesSharedServiceInstance();
             _settingsRepos = SettingsCreatorFactory.GetSetingsInstance();
 
@@ -114,31 +129,29 @@ namespace FBToken.Main.ViewModels
                     //End of - Reset result
                     IsGettingData = true;
 
-
-                    Debug.WriteLine($"Email: {UserEmail}");
-                    Debug.WriteLine($"Password: {UserPassword}");
+                    Debug.WriteLine($"Email: {UserEmail} - Password: {UserPassword}");
 
                     try
                     {
-                        //For testing
-                        //await Task.Delay(1000);
-                        //throw new Exception("Internet connection error.");
-                        //FBToken = SampleToken;
-                        //
-
                         string lastEmail = _settingsRepos.LastLoggedInEmail;
                         if (UserEmail != lastEmail)
                         {
-                            ////Tương tự log out khỏi browser khi sử dụng tài khoản mới
+                            ////Vốn được dùng cho chức năng Tương tự log out khỏi browser khi sử dụng tài khoản mới
                             //CookiesCollectionManagerForWebView.DeleteBrowserCookies(new Uri("https://facebook.com/"));
-                            //Tính năng này hiện không hoạt động, do đó trước khi get token cho tài khoản mới thì cần
+
+                            //Tính năng này hiện không hoạt động - Do container của WebView không cho phép tác động vào nó,
+                            //để reset data của WebView có thể vào:
+                            //C:\Users\"Username"\AppData\Local\Packages\Microsoft.Win32WebViewHost_cw5n1h2txyewy\AC
+                            //và xóa thư mục đó đi.
+
+                            //Do tự động logout không hoạt động nên trước khi get token cho tài khoản mới thì cần
                             //logout tài khoản cũ và đăng nhập bằng tài khoản mới trên trình duyệt
 
                             //Lưu lại email đã dùng để lấy token mới
                             _settingsRepos.LastLoggedInEmail = UserEmail;
                         }
 
-                        var tokenInfo = await _fbTokenService.NewGetTokenInfoAsync(UserEmail, UserPassword);
+                        var tokenInfo = await _fbTokenService.GetTokenInfoAsyncUsingPostMethod(UserEmail, UserPassword);
                         if (tokenInfo?.AccessToken == null)
                         {
                             throw new Exception("Đã có lỗi xảy ra, vui lòng thử lại.");
@@ -153,24 +166,24 @@ namespace FBToken.Main.ViewModels
                     catch (HttpRequestException ex)
                     {
                         ErrorMsg = "Vui lòng kiểm tra kết nối Internet.";
-                        Debug.WriteLine(ex.Message);
+                        Debug.WriteLine(ex);
                     }
                     catch (FacebookUserCheckPointException ex)
                     {
                         ErrorMsg =
                             "Tài khoản Facebook bị Checkpoint, vui lòng đăng nhập bằng trình duyệt trên máy tính hoặc điện thoại.";
-                        Debug.WriteLine(ex.Message);
+                        Debug.WriteLine(ex);
                     }
                     catch (FacebookUserInvalidUsernameOrPasswordException ex)
                     {
                         ErrorMsg =
                             "Sai email hoặc password. Vui lòng kiểm tra lại thông tin.";
-                        Debug.WriteLine(ex.Message);
+                        Debug.WriteLine(ex);
                     }
                     catch (Exception ex)
                     {
                         ErrorMsg = ex.Message;
-                        Debug.WriteLine(ex.Message);
+                        Debug.WriteLine(ex);
                     }
 
                     
@@ -183,13 +196,24 @@ namespace FBToken.Main.ViewModels
 
             SaveTokenCommand = new DelegateCommand(_ =>
             {
-                //Lưu file text: https://stackoverflow.com/questions/45276878/creating-a-txt-file-and-write-to-it
-                string filePath = _dialogService.ShowSaveFileDialog();
+                //Cách lưu file text: https://stackoverflow.com/questions/45276878/creating-a-txt-file-and-write-to-it
+
+                string filePath =
+                    _dialogService.ShowSaveFileDialog(null, $"FBToken_{DateTime.Now.ToString("yyyy-MM-dd")}.txt");
+                //Mở SaveFileDialog với tên mặc định, ví dụ: FBToken_2019-05-13.txt
+
                 if (filePath != null)
                 {
                     using (var tw = new StreamWriter(filePath, false))
                     {
-                        tw.Write(FBToken);
+                        try
+                        {
+                            tw.Write(FBToken); //Thực hiện ghi file
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine(ex);
+                        }
                     }
                 }
             });

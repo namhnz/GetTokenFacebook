@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using FBToken.Main.Models;
 using Newtonsoft.Json;
 
-namespace FBToken.Main.Core
+namespace FBToken.Main.Core.WebRequester
 {
     public class FacebookGetTokenRequester : IWebRequester
     {
@@ -21,22 +19,18 @@ namespace FBToken.Main.Core
             _httpClient = new HttpClient();
         }
 
-        public async Task PostRequestAsync<T>(string endpoint = FBTokenAPIUrlBase, object data = null, string args = null)
-        {
-            var payload = GetPayload(data);
-            await _httpClient.PostAsync($"{endpoint}?{args}", payload);
-        }
+        
 
         public async Task<T> GetRequestAsync<T>(string endpoint = FBTokenAPIUrlBase, string args = null)
         {
-            //TODO: sửa dấu chấm hỏi nếu args == null
-            var response = await _httpClient.GetAsync($"{endpoint}?{args}");
+            string requestUrlString = args != null ? $"{endpoint}?{args}" : endpoint;
+            var response = await _httpClient.GetAsync(requestUrlString);
             var resultString = await response.Content.ReadAsStringAsync();
 
             return JsonConvert.DeserializeObject<T>(resultString);
         }
 
-        public Task<T> NewPostRequestAsync<T>(string endpoint, object data, string args = null)
+        public Task<T> PostRequestAsync<T>(string endpoint, object data, string args = null)
         {
             throw new NotImplementedException();
         }

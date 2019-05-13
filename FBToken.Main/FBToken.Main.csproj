@@ -88,19 +88,18 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Converters\NullTovisibilityConverter.cs" />
-    <Compile Include="Core\FacebookGetTokenRequester.cs" />
-    <Compile Include="Core\FacebookServiceFactory.cs" />
-    <Compile Include="Core\FacebookTokenService.cs" />
-    <Compile Include="Core\FBGetTokenCookiesSharedRequester.cs" />
-    <Compile Include="Core\IFacebookTokenService.cs" />
-    <Compile Include="Core\IDialogService.cs" />
-    <Compile Include="Core\DialogService.cs" />
-    <Compile Include="Core\IOServiceFactory.cs" />
-    <Compile Include="Core\IWebRequester.cs" />
-    <Compile Include="Core\ISettingsRepos.cs" />
-    <Compile Include="Core\NewFacebookTokenService.cs" />
-    <Compile Include="Core\SettingsCreatorFactory.cs" />
-    <Compile Include="Core\SettingsRepos.cs" />
+    <Compile Include="Core\WebRequesters\FacebookGetTokenRequester.cs" />
+    <Compile Include="Core\Factories\FacebookServiceFactory.cs" />
+    <Compile Include="Core\Services\TokenServices\FacebookTokenService.cs" />
+    <Compile Include="Core\WebRequesters\FBGetTokenCookiesSharedRequester.cs" />
+    <Compile Include="Core\Services\TokenServices\IFacebookTokenService.cs" />
+    <Compile Include="Core\Services\UIInteractServices\IDialogService.cs" />
+    <Compile Include="Core\Services\UIInteractServices\DialogService.cs" />
+    <Compile Include="Core\Factories\DialogServiceFactory.cs" />
+    <Compile Include="Core\WebRequesters\IWebRequester.cs" />
+    <Compile Include="Core\Repository\Settings\ISettingsRepos.cs" />
+    <Compile Include="Core\Factories\SettingsCreatorFactory.cs" />
+    <Compile Include="Core\Repository\Settings\SettingsRepos.cs" />
     <Compile Include="Helpers\CookiesCollectionManagerForWebView.cs" />
     <Compile Include="Helpers\DelegateCommand.cs" />
     <Compile Include="Helpers\IViewModel.cs" />

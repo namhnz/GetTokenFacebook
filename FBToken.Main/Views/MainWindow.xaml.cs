@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -8,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
@@ -17,17 +19,15 @@ using Windows.UI.Xaml.Data;
 using FBToken.Main.Converters;
 using FBToken.Main.ViewModels;
 using Microsoft.Toolkit.Wpf.UI.XamlHost;
-using TextWrapping = Windows.UI.Xaml.TextWrapping;
+using UWPXaml = Windows.UI.Xaml;
 using UWPControls = Windows.UI.Xaml.Controls;
-using Visibility = System.Windows.Visibility;
-using Window = System.Windows.Window;
 
 namespace FBToken.Main.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : System.Windows.Window
     {
         private MainWindowViewModel _viewModel;
         private bool _isBrowserOpenning;
@@ -67,7 +67,7 @@ namespace FBToken.Main.Views
 
                         openCloseButton.Content = openBrowseFacebookViewString;
                         //Hiển thị lại phần lấy token
-                        MainGetTokenContent.Visibility = Visibility.Visible;
+                        MainGetTokenContent.Visibility = System.Windows.Visibility.Visible;
                     }
                     else //Nếu browser đang đóng thì mở browser mới
                     {
@@ -76,7 +76,7 @@ namespace FBToken.Main.Views
 
                         openCloseButton.Content = closeBrowseFacebookViewString;
                         //Ẩn phần lấy token đi
-                        MainGetTokenContent.Visibility = Visibility.Hidden;
+                        MainGetTokenContent.Visibility = System.Windows.Visibility.Hidden;
                     }
 
                     _isBrowserOpenning = !_isBrowserOpenning;
@@ -91,18 +91,18 @@ namespace FBToken.Main.Views
                 UWPControls.Button getTokenButton = new UWPControls.Button();
                 getTokenButton.Content = "Lấy Facebook Token";
                 getTokenButton.Width = 300;
-                getTokenButton.HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center;
-                getTokenButton.Margin = new Windows.UI.Xaml.Thickness(10);
-                getTokenButton.SetBinding(UWPControls.Button.CommandProperty, new Windows.UI.Xaml.Data.Binding()
+                getTokenButton.HorizontalAlignment = UWPXaml.HorizontalAlignment.Center;
+                getTokenButton.Margin = new UWPXaml.Thickness(10);
+                getTokenButton.SetBinding(UWPControls.Button.CommandProperty, new UWPXaml.Data.Binding()
                 {
                     Source = _viewModel,
-                    Path = new Windows.UI.Xaml.PropertyPath("GetTokenCommand")
+                    Path = new UWPXaml.PropertyPath("GetTokenCommand")
                 });
 
                 UWPControls.PasswordBox passwordBox = new UWPControls.PasswordBox();
                 passwordBox.PlaceholderText = "Nhập password";
                 passwordBox.Width = 300;
-                passwordBox.Margin = new Windows.UI.Xaml.Thickness(10);
+                passwordBox.Margin = new UWPXaml.Thickness(10);
                 passwordBox.PasswordChanged += (o, args) => { _viewModel.UserPassword = passwordBox.Password; };
 
                 //Thêm tooltip cho password TextBox
@@ -115,21 +115,20 @@ namespace FBToken.Main.Views
                 emailTextBox.PlaceholderText = "Nhập email";
                 emailTextBox.IsSpellCheckEnabled = false;
                 emailTextBox.Width = 300;
-                emailTextBox.Margin = new Windows.UI.Xaml.Thickness(10);
+                emailTextBox.Margin = new UWPXaml.Thickness(10);
                 //https://github.com/Microsoft/XamlIslandBlogPostSample/blob/master/WpfApp1/BindingPage.xaml.cs
-                emailTextBox.SetBinding(UWPControls.TextBox.TextProperty, new Windows.UI.Xaml.Data.Binding()
+                emailTextBox.SetBinding(UWPControls.TextBox.TextProperty, new UWPXaml.Data.Binding()
                 {
                     Source = _viewModel,
-                    Path = new Windows.UI.Xaml.PropertyPath("UserEmail"),
-                    UpdateSourceTrigger = Windows.UI.Xaml.Data.UpdateSourceTrigger.PropertyChanged,
-                    Mode = Windows.UI.Xaml.Data.BindingMode.TwoWay
+                    Path = new UWPXaml.PropertyPath("UserEmail"),
+                    UpdateSourceTrigger = UWPXaml.Data.UpdateSourceTrigger.PropertyChanged,
+                    Mode = UWPXaml.Data.BindingMode.TwoWay
                 });
 
-                
+
                 inputStackPanel.Children.Add(emailTextBox);
                 inputStackPanel.Children.Add(passwordBox);
                 inputStackPanel.Children.Add(getTokenButton);
-
             }
         }
 
@@ -141,37 +140,37 @@ namespace FBToken.Main.Views
 
                 UWPControls.TextBox fbTokenTextBox = new UWPControls.TextBox();
                 fbTokenTextBox.Width = 300;
-                fbTokenTextBox.Margin = new Windows.UI.Xaml.Thickness(10);
-                fbTokenTextBox.BorderThickness = new Windows.UI.Xaml.Thickness(0);
-                fbTokenTextBox.Background = new Windows.UI.Xaml.Media.SolidColorBrush(Windows.UI.Colors.Transparent);
+                fbTokenTextBox.Margin = new UWPXaml.Thickness(10);
+                fbTokenTextBox.BorderThickness = new UWPXaml.Thickness(0);
+                fbTokenTextBox.Background = new UWPXaml.Media.SolidColorBrush(Windows.UI.Colors.Transparent);
                 fbTokenTextBox.IsReadOnly = true;
-                fbTokenTextBox.TextWrapping = TextWrapping.Wrap;
-                fbTokenTextBox.SetBinding(UWPControls.TextBox.TextProperty, new Windows.UI.Xaml.Data.Binding()
+                fbTokenTextBox.TextWrapping = UWPXaml.TextWrapping.Wrap;
+                fbTokenTextBox.SetBinding(UWPControls.TextBox.TextProperty, new UWPXaml.Data.Binding()
                 {
                     Source = _viewModel,
-                    Path = new Windows.UI.Xaml.PropertyPath("FBToken"),
-                    Mode = Windows.UI.Xaml.Data.BindingMode.OneWay
+                    Path = new UWPXaml.PropertyPath("FBToken"),
+                    Mode = UWPXaml.Data.BindingMode.OneWay
                 });
 
                 UWPControls.Button copyTokenButton = new UWPControls.Button();
                 copyTokenButton.Width = 150;
-                copyTokenButton.Margin = new Windows.UI.Xaml.Thickness(0, 0, 5, 0);
+                copyTokenButton.Margin = new UWPXaml.Thickness(0, 0, 5, 0);
                 copyTokenButton.Content = "Sao chép Token";
                 copyTokenButton.Click += (o, args) => { Clipboard.SetText(_viewModel.FBToken ?? string.Empty); };
 
                 UWPControls.Button saveTokenButton = new UWPControls.Button();
                 saveTokenButton.Width = 120;
                 saveTokenButton.Content = "Lưu Token";
-                saveTokenButton.SetBinding(UWPControls.Button.CommandProperty, new Windows.UI.Xaml.Data.Binding()
+                saveTokenButton.SetBinding(UWPControls.Button.CommandProperty, new UWPXaml.Data.Binding()
                 {
                     Source = _viewModel,
-                    Path = new Windows.UI.Xaml.PropertyPath("SaveTokenCommand")
+                    Path = new UWPXaml.PropertyPath("SaveTokenCommand")
                 });
 
                 UWPControls.StackPanel successCommandButtonsStackPanel = new UWPControls.StackPanel();
                 successCommandButtonsStackPanel.Orientation = UWPControls.Orientation.Horizontal;
-                successCommandButtonsStackPanel.Margin = new Windows.UI.Xaml.Thickness(10);
-                successCommandButtonsStackPanel.HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center;
+                successCommandButtonsStackPanel.Margin = new UWPXaml.Thickness(10);
+                successCommandButtonsStackPanel.HorizontalAlignment = UWPXaml.HorizontalAlignment.Center;
                 successCommandButtonsStackPanel.Children.Add(copyTokenButton);
                 successCommandButtonsStackPanel.Children.Add(saveTokenButton);
 
@@ -181,24 +180,25 @@ namespace FBToken.Main.Views
                 successStackPanel.Children.Add(fbTokenTextBox);
                 successStackPanel.Children.Add(successCommandButtonsStackPanel);
 
-                successStackPanel.SetBinding(UWPControls.StackPanel.VisibilityProperty, new Windows.UI.Xaml.Data.Binding()
-                {
-                    Source = _viewModel,
-                    Path = new Windows.UI.Xaml.PropertyPath("FBToken"),
-                    Converter = new NullTovisibilityConverter()
-                });
+                successStackPanel.SetBinding(UWPControls.StackPanel.VisibilityProperty,
+                    new UWPXaml.Data.Binding()
+                    {
+                        Source = _viewModel,
+                        Path = new UWPXaml.PropertyPath("FBToken"),
+                        Converter = new NullTovisibilityConverter()
+                    });
 
                 //Dùng cho hiển thị lỗi
                 UWPControls.StackPanel errorStackPanel = new UWPControls.StackPanel();
 
                 UWPControls.TextBlock errorMsgTextBlock = new UWPControls.TextBlock();
                 errorMsgTextBlock.Width = 300;
-                errorMsgTextBlock.TextWrapping = TextWrapping.WrapWholeWords;
-                errorMsgTextBlock.Foreground = new Windows.UI.Xaml.Media.SolidColorBrush(Windows.UI.Colors.Red);
-                errorMsgTextBlock.SetBinding(UWPControls.TextBlock.TextProperty, new Windows.UI.Xaml.Data.Binding()
+                errorMsgTextBlock.TextWrapping = UWPXaml.TextWrapping.WrapWholeWords;
+                errorMsgTextBlock.Foreground = new UWPXaml.Media.SolidColorBrush(Windows.UI.Colors.Red);
+                errorMsgTextBlock.SetBinding(UWPControls.TextBlock.TextProperty, new UWPXaml.Data.Binding()
                 {
                     Source = _viewModel,
-                    Path = new Windows.UI.Xaml.PropertyPath("ErrorMsg")
+                    Path = new UWPXaml.PropertyPath("ErrorMsg")
                 });
 
                 errorStackPanel.Children.Add(errorMsgTextBlock);
@@ -214,14 +214,13 @@ namespace FBToken.Main.Views
         {
             if (sender is WindowsXamlHost host && host.Child is UWPControls.ProgressRing isGettingDataProgressRing)
             {
-                isGettingDataProgressRing.SetBinding(UWPControls.ProgressRing.IsActiveProperty, new Windows.UI.Xaml.Data.Binding()
-                {
-                    Source = _viewModel,
-                    Path = new Windows.UI.Xaml.PropertyPath("IsGettingData")
-                });
+                isGettingDataProgressRing.SetBinding(UWPControls.ProgressRing.IsActiveProperty,
+                    new UWPXaml.Data.Binding()
+                    {
+                        Source = _viewModel,
+                        Path = new UWPXaml.PropertyPath("IsGettingData")
+                    });
             }
         }
-
-
     }
 }

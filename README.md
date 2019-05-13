@@ -6,4 +6,4 @@ Tool tương tự của Vy Nghĩa: https://www.facebook.com/pagevynghia/posts/24
 Hình ảnh của tool:   
 ![alt text](https://i.imgur.com/RsBlpKQ.jpg)   
 ![alt text](https://i.imgur.com/4riMDPD.jpg)   
-![alt text](https://i.imgur.com/TRnSkRd.jpg)   
+![alt text](https://i.imgur.com/IconRyp.jpg)   
