@@ -138,7 +138,7 @@ namespace FBToken.Main.ViewModels
                             _settingsRepos.LastLoggedInEmail = UserEmail;
                         }
 
-                        var tokenInfo = await _fbTokenService.GetTokenInfoAsync(UserEmail, UserPassword);
+                        var tokenInfo = await _fbTokenService.NewGetTokenInfoAsync(UserEmail, UserPassword);
                         if (tokenInfo?.AccessToken == null)
                         {
                             throw new Exception("Đã có lỗi xảy ra, vui lòng thử lại.");

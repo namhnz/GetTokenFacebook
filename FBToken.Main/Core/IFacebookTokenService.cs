@@ -10,5 +10,6 @@ namespace FBToken.Main.Core
     public interface IFacebookTokenService
     {
         Task<UserTokenInfo> GetTokenInfoAsync(string email, string password);
+        Task<UserTokenInfo> NewGetTokenInfoAsync(string email, string password);
     }
 }

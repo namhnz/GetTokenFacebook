@@ -126,6 +126,11 @@ namespace FBToken.Tests
             return Task.FromResult(responseResult);
         }
 
+        public Task<T> NewPostRequestAsync<T>(string endpoint, object data, string args = null)
+        {
+            throw new NotImplementedException();
+        }
+
         public string CalledUrl { get; set; }
     }
 

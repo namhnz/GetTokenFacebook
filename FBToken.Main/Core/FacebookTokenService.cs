@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using FBToken.Main.Models;
@@ -57,6 +59,67 @@ namespace FBToken.Main.Core
             }
             catch (RuntimeBinderException ex)
             {
+            }
+
+            if (result == null)
+            {
+                //Khi không có kết quả trả về từ server
+                return null;
+            }
+            else
+            {
+                //Có kết quả trả về từ server nhưng không nằm trong các trường hợp error và token info ở trên
+                return new UserTokenInfo();
+            }
+        }
+
+        public async Task<UserTokenInfo> NewGetTokenInfoAsync(string email, string password)
+        {
+            string baseUrl = @"https://b-graph.facebook.com/auth/login";
+            List<KeyValuePair<string, string>> formData = new List<KeyValuePair<string, string>>();
+            formData.Add(new KeyValuePair<string, string>("email", email));
+            formData.Add(new KeyValuePair<string, string>("password", password));
+            formData.Add(new KeyValuePair<string, string>("access_token", "6628568379|c1e620fa708a1d5696fb991c1bde5662"));
+
+            var result = await _requester.NewPostRequestAsync<dynamic>(baseUrl, formData);
+
+            //https://stackoverflow.com/questions/2998954/test-if-a-property-is-available-on-a-dynamic-variable
+            try
+            {
+                //Khối này được sử dụng để kiểm tra kết quả trả về có phải lỗi hay không
+                if (result.error.code == 405)
+                {
+                    throw new FacebookUserCheckPointException(result.error.message.ToString());
+                }
+
+                if (result.error.code == 401)
+                {
+                    throw new FacebookUserInvalidUsernameOrPasswordException(result.error.message.ToString());
+                }
+            }
+            catch (RuntimeBinderException ex)
+            {
+                Debug.WriteLine("error: " + ex);
+            }
+
+            try
+            {
+                //Khối này được sử dụng để kiểm tra kết quả trả về có là kết quả chứa token hay không
+                var tokenInfo = new UserTokenInfo()
+                {
+                    SessionKey = result.session_key,
+                    Uid = result.uid,
+                    Secret = result.secret,
+                    AccessToken = result.access_token,
+                    MachineId = result.machine_id,
+                    Confirmed = result.confirmed,
+                    Identifier = result.identifier
+                };
+                return tokenInfo;
+            }
+            catch (RuntimeBinderException ex)
+            {
+                Debug.WriteLine("success: " + ex);
             }
 
             if (result == null)

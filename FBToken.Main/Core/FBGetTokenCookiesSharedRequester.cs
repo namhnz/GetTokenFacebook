@@ -45,6 +45,28 @@ namespace FBToken.Main.Core
             return JsonConvert.DeserializeObject<T>(resultContent);
         }
 
+        public async Task<T> NewPostRequestAsync<T>(string endpoint, object data, string args = null)
+        {
+            //https://social.msdn.microsoft.com/Forums/windows/en-US/e8091bfc-8975-4a52-a353-716401f73846/u81send-file-by-post-using-windowswebhttphttpclient?forum=wpdevelop
+
+            var formData = data as IEnumerable<KeyValuePair<string, string>>;
+
+            HttpResponseMessage requestResult;
+            if (formData != null) 
+            {
+                HttpFormUrlEncodedContent form = new HttpFormUrlEncodedContent(formData);
+                requestResult = await _httpClient.PostAsync(new Uri(endpoint), form);
+            }
+            else
+            {
+                HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, new Uri(endpoint));
+                requestResult = await _httpClient.SendRequestAsync(request);
+            }
+
+            var resultContent = await requestResult.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<T>(resultContent);
+        }
+
         private void GetCookiesUsedByHttpClient()
         {
             var filter = new HttpBaseProtocolFilter();

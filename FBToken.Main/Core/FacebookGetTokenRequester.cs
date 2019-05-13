@@ -36,6 +36,11 @@ namespace FBToken.Main.Core
             return JsonConvert.DeserializeObject<T>(resultString);
         }
 
+        public Task<T> NewPostRequestAsync<T>(string endpoint, object data, string args = null)
+        {
+            throw new NotImplementedException();
+        }
+
         private StringContent GetPayload(object obj)
         {
             var json = JsonConvert.SerializeObject(obj);

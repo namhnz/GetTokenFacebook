@@ -6,5 +6,6 @@ namespace FBToken.Main.Core
     {
         Task PostRequestAsync<T>(string endpoint, object data, string args = null);
         Task<T> GetRequestAsync<T>(string endpoint, string args = null);
+        Task<T> NewPostRequestAsync<T>(string endpoint, object data, string args = null);
     }
 }

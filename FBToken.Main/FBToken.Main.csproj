@@ -98,6 +98,7 @@
     <Compile Include="Core\IOServiceFactory.cs" />
     <Compile Include="Core\IWebRequester.cs" />
     <Compile Include="Core\ISettingsRepos.cs" />
+    <Compile Include="Core\NewFacebookTokenService.cs" />
     <Compile Include="Core\SettingsCreatorFactory.cs" />
     <Compile Include="Core\SettingsRepos.cs" />
     <Compile Include="Helpers\CookiesCollectionManagerForWebView.cs" />
