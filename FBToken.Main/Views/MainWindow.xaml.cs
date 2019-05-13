@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls.Primitives;
+using Windows.UI.Xaml.Data;
 using FBToken.Main.Converters;
 using FBToken.Main.ViewModels;
 using Microsoft.Toolkit.Wpf.UI.XamlHost;
@@ -90,6 +91,7 @@ namespace FBToken.Main.Views
                 UWPControls.Button getTokenButton = new UWPControls.Button();
                 getTokenButton.Content = "Lấy Facebook Token";
                 getTokenButton.Width = 300;
+                getTokenButton.HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center;
                 getTokenButton.Margin = new Windows.UI.Xaml.Thickness(10);
                 getTokenButton.SetBinding(UWPControls.Button.CommandProperty, new Windows.UI.Xaml.Data.Binding()
                 {
@@ -152,15 +154,32 @@ namespace FBToken.Main.Views
                 });
 
                 UWPControls.Button copyTokenButton = new UWPControls.Button();
-                copyTokenButton.Width = 300;
-                copyTokenButton.Margin = new Windows.UI.Xaml.Thickness(10);
+                copyTokenButton.Width = 150;
+                copyTokenButton.Margin = new Windows.UI.Xaml.Thickness(0, 0, 5, 0);
                 copyTokenButton.Content = "Sao chép Token";
                 copyTokenButton.Click += (o, args) => { Clipboard.SetText(_viewModel.FBToken ?? string.Empty); };
+
+                UWPControls.Button saveTokenButton = new UWPControls.Button();
+                saveTokenButton.Width = 120;
+                saveTokenButton.Content = "Lưu Token";
+                saveTokenButton.SetBinding(UWPControls.Button.CommandProperty, new Windows.UI.Xaml.Data.Binding()
+                {
+                    Source = _viewModel,
+                    Path = new Windows.UI.Xaml.PropertyPath("SaveTokenCommand")
+                });
+
+                UWPControls.StackPanel successCommandButtonsStackPanel = new UWPControls.StackPanel();
+                successCommandButtonsStackPanel.Orientation = UWPControls.Orientation.Horizontal;
+                successCommandButtonsStackPanel.Margin = new Windows.UI.Xaml.Thickness(10);
+                successCommandButtonsStackPanel.HorizontalAlignment = Windows.UI.Xaml.HorizontalAlignment.Center;
+                successCommandButtonsStackPanel.Children.Add(copyTokenButton);
+                successCommandButtonsStackPanel.Children.Add(saveTokenButton);
+
 
                 UWPControls.StackPanel successStackPanel = new UWPControls.StackPanel();
 
                 successStackPanel.Children.Add(fbTokenTextBox);
-                successStackPanel.Children.Add(copyTokenButton);
+                successStackPanel.Children.Add(successCommandButtonsStackPanel);
 
                 successStackPanel.SetBinding(UWPControls.StackPanel.VisibilityProperty, new Windows.UI.Xaml.Data.Binding()
                 {

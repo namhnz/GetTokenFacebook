@@ -93,6 +93,9 @@
     <Compile Include="Core\FacebookTokenService.cs" />
     <Compile Include="Core\FBGetTokenCookiesSharedRequester.cs" />
     <Compile Include="Core\IFacebookTokenService.cs" />
+    <Compile Include="Core\IDialogService.cs" />
+    <Compile Include="Core\DialogService.cs" />
+    <Compile Include="Core\IOServiceFactory.cs" />
     <Compile Include="Core\IWebRequester.cs" />
     <Compile Include="Core\ISettingsRepos.cs" />
     <Compile Include="Core\SettingsCreatorFactory.cs" />

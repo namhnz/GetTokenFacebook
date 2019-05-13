@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -18,6 +19,7 @@ namespace FBToken.Main.ViewModels
 
         private IFacebookTokenService _fbTokenService;
         private ISettingsRepos _settingsRepos;
+        private IDialogService _dialogService;
 
         private string _error;
 
@@ -96,13 +98,15 @@ namespace FBToken.Main.ViewModels
 
 
         public DelegateCommand GetTokenCommand { get; private set; }
+        public DelegateCommand SaveTokenCommand { get; private set; }
 
         public MainWindowViewModel()
         {
+            _dialogService = IOServiceFactory.GetDialogServiceInstance();
             _fbTokenService = FacebookServiceFactory.GetFacebookTokenWithCookiesSharedServiceInstance();
             _settingsRepos = SettingsCreatorFactory.GetSetingsInstance();
 
-            GetTokenCommand = new DelegateCommand(async o =>
+            GetTokenCommand = new DelegateCommand(async _ =>
                 {
                     //Reset result
                     ErrorMsg = null;
@@ -172,10 +176,23 @@ namespace FBToken.Main.ViewModels
                     
                     IsGettingData = false;
                 },
-                o =>
+                _ =>
                 {
                     return !string.IsNullOrEmpty(UserEmail) && !string.IsNullOrEmpty(UserPassword) && !IsGettingData;
                 });
+
+            SaveTokenCommand = new DelegateCommand(_ =>
+            {
+                //Lưu file text: https://stackoverflow.com/questions/45276878/creating-a-txt-file-and-write-to-it
+                string filePath = _dialogService.ShowSaveFileDialog();
+                if (filePath != null)
+                {
+                    using (var tw = new StreamWriter(filePath, false))
+                    {
+                        tw.Write(FBToken);
+                    }
+                }
+            });
         }
     }
 }
