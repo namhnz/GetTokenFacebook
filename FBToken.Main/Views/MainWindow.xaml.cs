@@ -1,21 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Interop;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using FBToken.Main.Converters;
 using FBToken.Main.ViewModels;
 using Microsoft.Toolkit.Wpf.UI.XamlHost;
@@ -30,7 +14,6 @@ namespace FBToken.Main.Views
     public partial class MainWindow : System.Windows.Window
     {
         private MainWindowViewModel _viewModel;
-        private bool _isBrowserOpenning;
 
         public MainWindow()
         {
@@ -47,42 +30,8 @@ namespace FBToken.Main.Views
             IsGettingDataProgressRing.ChildChanged += IsGettingDataProgressRingOnChildChanged;
             ResultStackPanel.ChildChanged += ResultStackPanelOnChildChanged;
 
-            OpenCloseBrowserButton.ChildChanged += OpenCloseBrowserButtonOnChildChanged;
         }
 
-        private void OpenCloseBrowserButtonOnChildChanged(object sender, EventArgs e)
-        {
-            if (sender is WindowsXamlHost host && host.Child is UWPControls.Button openCloseButton)
-            {
-                string openBrowseFacebookViewString = "Đăng nhập bằng trình duyệt";
-                string closeBrowseFacebookViewString = "Đóng trình duyệt";
-
-                openCloseButton.Content = openBrowseFacebookViewString;
-
-                openCloseButton.Click += (o, args) =>
-                {
-                    if (_isBrowserOpenning) //Nếu browser đang mở thì đóng lại
-                    {
-                        BrowseFacebookContent.Children.RemoveAt(0);
-
-                        openCloseButton.Content = openBrowseFacebookViewString;
-                        //Hiển thị lại phần lấy token
-                        MainGetTokenContent.Visibility = System.Windows.Visibility.Visible;
-                    }
-                    else //Nếu browser đang đóng thì mở browser mới
-                    {
-                        BrowseFacebookView browserView = new BrowseFacebookView();
-                        BrowseFacebookContent.Children.Add(browserView);
-
-                        openCloseButton.Content = closeBrowseFacebookViewString;
-                        //Ẩn phần lấy token đi
-                        MainGetTokenContent.Visibility = System.Windows.Visibility.Hidden;
-                    }
-
-                    _isBrowserOpenning = !_isBrowserOpenning;
-                };
-            }
-        }
 
         private void UserInputStackPanelOnChildChanged(object sender, EventArgs e)
         {

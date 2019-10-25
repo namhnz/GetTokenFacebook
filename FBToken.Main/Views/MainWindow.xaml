@@ -27,28 +27,6 @@
             <xamlHost:WindowsXamlHost InitialTypeName="Windows.UI.Xaml.Controls.StackPanel"
                                       x:Name="ResultStackPanel" />
         </StackPanel>
-        <Grid VerticalAlignment="Bottom"
-              Margin="5">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <TextBlock
-                Text="Để tránh bị checkpoint, vui lòng đảm bảo trình duyệt đã đăng nhập vào tài khoản mà bạn sẽ lấy token."
-                Foreground="#0065B3"
-                TextWrapping="Wrap"
-                Grid.Column="0"
-                VerticalAlignment="Center"
-                Margin="0 0 10 0"
-                FontSize="11" />
-            <xamlHost:WindowsXamlHost Grid.Column="1"
-                                      Name="OpenCloseBrowserButton"
-                                      InitialTypeName="Windows.UI.Xaml.Controls.Button"
-                                      Panel.ZIndex="100" />
-        </Grid>
-        <Grid Name="BrowseFacebookContent"
-              Panel.ZIndex="50">
-            <!-- Dùng để hiển thị browser thực hiện login lần đầu -->
-        </Grid>
+        
     </Grid>
 </Window>
