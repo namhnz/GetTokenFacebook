@@ -9,7 +9,7 @@ namespace FBToken.Main.Ultis
         {
             //https://stackoverflow.com/questions/23518966/convert-a-dictionary-to-string-of-url-parameters
 
-            return string.Join('&', parameters.Select(kvp => $"{kvp.Key}={kvp.Value}"));
+            return string.Join("&", parameters.Select(kvp => $"{kvp.Key}={kvp.Value}"));
         }
     }
 }

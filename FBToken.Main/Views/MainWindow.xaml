@@ -7,26 +7,7 @@
     xmlns:xamlHost="clr-namespace:Microsoft.Toolkit.Wpf.UI.XamlHost;assembly=Microsoft.Toolkit.Wpf.UI.XamlHost"
     x:Class="FBToken.Main.Views.MainWindow"
     mc:Ignorable="d"
-    Title="Get FB Token" Height="610" Width="460">
-    <Grid Name="RootGrid">
-        <StackPanel HorizontalAlignment="Center"
-                    VerticalAlignment="Top"
-                    Panel.ZIndex="0"
-                    Name="MainGetTokenContent">
-            <!-- https://stackoverflow.com/questions/5645274/image-in-wpf-getting-blurry -->
-            <!-- <Image Width="50" -->
-            <!--        Height="50" -->
-            <!--        Source="/Resources/facebook-256x256.png" -->
-            <!--        VerticalAlignment="Top" -->
-            <!--        RenderOptions.BitmapScalingMode="NearestNeighbor" -->
-            <!--        RenderOptions.EdgeMode="Aliased"/> -->
-            <xamlHost:WindowsXamlHost InitialTypeName="Windows.UI.Xaml.Controls.StackPanel"
-                                      x:Name="UserInputStackPanel" />
-            <xamlHost:WindowsXamlHost InitialTypeName="Windows.UI.Xaml.Controls.ProgressRing"
-                                      x:Name="IsGettingDataProgressRing" />
-            <xamlHost:WindowsXamlHost InitialTypeName="Windows.UI.Xaml.Controls.StackPanel"
-                                      x:Name="ResultStackPanel" />
-        </StackPanel>
-        
-    </Grid>
+    Title="Get Token Facebook" Height="610" Width="460">
+    <xamlHost:WindowsXamlHost x:Name="container"
+                              InitialTypeName="Windows.UI.Xaml.Controls.Grid"/>
 </Window>

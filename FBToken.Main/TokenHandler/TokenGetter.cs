@@ -10,7 +10,7 @@ namespace FBToken.Main.TokenHandler
 {
     public class TokenGetter
     {
-        public static async Task<string> RequestNew(string email, string password)
+        public static async Task<HttpResponseMessage> RequestNew(string email, string password)
         {
             var sim = RandomNumberGenerator.NumberCalculate(EToInt("2e4"), EToInt("4e4")).ToString();
             var deviceID = Guid.NewGuid().ToString();
@@ -43,29 +43,36 @@ namespace FBToken.Main.TokenHandler
 
             using (var client = new HttpClient())
             {
-                using (var request = new HttpRequestMessage(HttpMethod.Post, "https://b-api.facebook.com/method/auth.login"))
+                using (var request =
+                    new HttpRequestMessage(HttpMethod.Post, "https://b-api.facebook.com/method/auth.login"))
                 {
                     request.Headers.TryAddWithoutValidation("x-fb-connection-bandwidth",
                         RandomNumberGenerator.NumberCalculate(EToInt("2e7"), EToInt("3e7")).ToString());
                     request.Headers.TryAddWithoutValidation("x-fb-sim-hni", sim);
                     request.Headers.TryAddWithoutValidation("x-fb-net-hni", sim);
                     request.Headers.TryAddWithoutValidation("x-fb-connection-quality", "EXCELLENT");
-                    request.Headers.TryAddWithoutValidation("x-fb-connection-type", "cell.CTRadioAccessTechnologyHSDPA");
-                    request.Headers.TryAddWithoutValidation("user-agent", "Dalvik/1.6.0 (Linux; U; Android 4.4.2; NX55 Build/KOT5506) [FBAN/FB4A;FBAV/106.0.0.26.68;FBBV/45904160;FBDM/{density=3.0,width=1080,height=1920};FBLC/it_IT;FBRV/45904160;FBCR/PosteMobile;FBMF/asus;FBBD/asus;FBPN/com.facebook.katana;FBDV/ASUS_Z00AD;FBSV/5.0;FBOP/1;FBCA/x86:armeabi-v7a;]");
+                    request.Headers.TryAddWithoutValidation("x-fb-connection-type",
+                        "cell.CTRadioAccessTechnologyHSDPA");
+                    request.Headers.TryAddWithoutValidation("user-agent",
+                        "Dalvik/1.6.0 (Linux; U; Android 4.4.2; NX55 Build/KOT5506) [FBAN/FB4A;FBAV/106.0.0.26.68;FBBV/45904160;FBDM/{density=3.0,width=1080,height=1920};FBLC/it_IT;FBRV/45904160;FBCR/PosteMobile;FBMF/asus;FBBD/asus;FBPN/com.facebook.katana;FBDV/ASUS_Z00AD;FBSV/5.0;FBOP/1;FBCA/x86:armeabi-v7a;]");
                     request.Headers.TryAddWithoutValidation("content-type", "application/x-www-form-urlencoded");
                     request.Headers.TryAddWithoutValidation("x-fb-http-engine", "Liger");
 
-                    request.Content = new StringContent(QueryString.Stringify(formData), Encoding.UTF8, "application/x-www-form-urlencoded");
+                    request.Content = new StringContent(QueryString.Stringify(formData), Encoding.UTF8,
+                        "application/x-www-form-urlencoded");
 
-                    using (var response = await client.SendAsync(request).ConfigureAwait(false))
-                    {
-                        return await response.Content.ReadAsStringAsync();
-                    }
+//                    using (var response = await client.SendAsync(request).ConfigureAwait(false))
+//                    {
+//                        //return await response.Content.ReadAsStringAsync();
+//                        return response;
+//                    }
+                    var response = await client.SendAsync(request).ConfigureAwait(false);
+                    return response;
                 }
             }
         }
 
-        public static int HexToInt(string hexValue)
+        private static int HexToInt(string hexValue)
         {
             //https://stackoverflow.com/questions/9820165/convert-hexadecimal-string-to-its-numerical-values-in-c-sharp
 
@@ -79,7 +86,7 @@ namespace FBToken.Main.TokenHandler
             }
         }
 
-        public static int EToInt(string eValue)
+        private static int EToInt(string eValue)
         {
             eValue = eValue.ToLower();
             if (eValue.Contains("e"))
@@ -94,7 +101,7 @@ namespace FBToken.Main.TokenHandler
             return 0;
         }
 
-        public static string GetSig(Dictionary<string, string> formData)
+        private static string GetSig(Dictionary<string, string> formData)
         {
             var sig = "";
             foreach (var key in formData.Keys)

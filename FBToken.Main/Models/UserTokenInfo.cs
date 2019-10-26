@@ -12,7 +12,6 @@ namespace FBToken.Main.Models
         public string Uid { get; set; }
         public string Secret { get; set; }
         public string AccessToken { get; set; }
-        public string MachineId { get; set; }
         public bool Confirmed { get; set; }
         public string Identifier { get; set; }
     }
